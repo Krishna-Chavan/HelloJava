@@ -42,3 +42,7 @@ jobs:
     - name: Set CLASSPATH
       run: |
         export CLASSPATH=".:selenium-server-standalone.jar:testng-6.8.7.jar"
+    - name: Compile and Run test
+      run: |
+        javac BrillioOneTest.java
+        java BrillioOneTest
