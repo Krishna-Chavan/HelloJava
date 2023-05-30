@@ -31,21 +31,11 @@ jobs:
         sudo mv chromedriver /usr/bin/chromedriver
         sudo chown root:root /usr/bin/chromedriver
         sudo chmod +x /usr/bin/chromedriver
-
-    - name: Set up Selenium Server and TestNG
-      run: |
         wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
         mv selenium-server-standalone-3.141.59.jar selenium-server-standalone.jar
         wget http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
         unzip testng-6.8.7.jar.zip
-
-    - name: Run Functional Tests
-      run: |
         xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone.jar & 
-    - name: Set CLASSPATH
-      run: |
         export CLASSPATH=".:selenium-server-standalone.jar:testng-6.8.7.jar"
-    - name: Compile and Run test
-      run: |
         javac BrillioOneTest.java
         java BrillioOneTest
