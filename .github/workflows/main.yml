@@ -38,8 +38,7 @@ jobs:
 
     - name: Run Functional Tests
       run: |
-        xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone.jar
-
+        xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone.jar & 
     - name: Set CLASSPATH
       run: |
         export CLASSPATH=".:selenium-server-standalone.jar:testng-6.8.7.jar"
