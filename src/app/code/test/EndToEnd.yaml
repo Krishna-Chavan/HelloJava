@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run_scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH client
+        run: sudo apt-get install -y openssh-client
+      - name: Copy SSH private key
+        run: |
+          echo "$SSH_PRIVATE_KEY_RUN_SCRIPT" >> ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      - name: Run script on VM
+        run: |
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@54.175.167.86 'ls -l'
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@54.175.167.86 "./script.sh $PARAMETER1 $PARAMETER2 $PARAMETER3 $PARAMETER4"
+
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build
+        run: mvn clean package
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: JAR
+          path: target/*.jar
+
+  Test:
+    runs-on: ubuntu-latest
+    needs: Build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run tests
+        run: mvn test
+      - name: Upload test reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test Results
+          path: target/surefire-reports/
